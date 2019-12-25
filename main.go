@@ -12,7 +12,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
 
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/postgres"
 	"github.com/spf13/viper"
 
@@ -31,7 +30,7 @@ func init() {
 	}
 }
 
-func startKafkaConsumers(c *kafka.Consumer) {
+func startKafkaConsumers(c *kafka.Consumer, db *dbconn.Connection) {
 
 	// c.SubscribeTopics([]string{"myTopic", "^aRegex.*[Tt]opic"}, nil)
 	c.SubscribeTopics([]string{
@@ -54,7 +53,7 @@ func startKafkaConsumers(c *kafka.Consumer) {
 }
 
 // startGrpcServer to starting GRPC Server
-func startGrpcServer(port string, db *gorm.DB) error {
+func startGrpcServer(port string, db *dbconn.Connection) error {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -85,54 +84,33 @@ func startGrpcServer(port string, db *gorm.DB) error {
 }
 
 func main() {
-	isLocal := viper.GetString("env") == "local"
-	var dbHost, dbPort, dbUser, dbPass, dbName string
 
-	if isLocal {
-		dbHost = viper.GetString(`database-local.host`)
-		dbPort = viper.GetString(`database-local.port`)
-		dbUser = viper.GetString(`database-local.user`)
-		dbPass = viper.GetString(`database-local.pass`)
-		dbName = viper.GetString(`database-local.name`)
-	} else {
-		dbHost = viper.GetString(`database.host`)
-		dbPort = viper.GetString(`database.port`)
-		dbUser = viper.GetString(`database.user`)
-		dbPass = viper.GetString(`database.pass`)
-		dbName = viper.GetString(`database.name`)
-	}
+	// Connection for KAFKA
+	conn := &dbconn.Connection{}
+	conn.Open()
 
-	db, err := gorm.Open("postgres", fmt.Sprintf("host=%v port=%v user=%v dbname=%v password=%v sslmode=disable", dbHost, dbPort, dbUser, dbName, dbPass))
-	if err != nil {
-		log.Fatalf("failed to established db connection: %v", err)
-	}
+	// Connection for GRPC
+	conn2 := &dbconn.Connection{}
+	conn2.Open()
 
-	defer db.Close()
-
-	dbconn.Migrate(db)
-
-	// lis, err := net.Listen("tcp", port)
-	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
-	}
+	defer conn.Close()
+	defer conn2.Close()
 
 	// KAFKA Consumers
-
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
 		"bootstrap.servers": "0.0.0.0:9092,0.0.0.0:9093,0.0.0.0:9094",
 		"group.id":          "myGroup",
 		"auto.offset.reset": "earliest",
 	})
 
-	defer c.Close()
-
 	if err != nil {
 		panic(err)
 	}
 
-	go startKafkaConsumers(c)
+	go startKafkaConsumers(c, conn)
 
-	go startGrpcServer(viper.GetString("server.grpc-port"), db)
+	// new connection for grpc
+	startGrpcServer(viper.GetString("server.grpc-port"), conn2)
 
 	<-make(chan int)
 }

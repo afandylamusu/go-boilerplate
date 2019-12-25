@@ -4,7 +4,8 @@ import (
 	"github.com/afandylamusu/stnkku.mdm/models"
 )
 
-// Service represent the customer service
-type Service interface {
+// Repository represent the customer repository
+type Repository interface {
 	Fetch(query interface{}, args ...interface{}) ([]models.Customer, error)
+	Store(m *models.Customer) error
 }
