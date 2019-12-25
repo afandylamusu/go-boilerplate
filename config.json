@@ -1,0 +1,26 @@
+{
+    "debug": true,
+    "env": "local",
+    "server": {
+      "http-port": ":9090",
+      "grpc-port": ":9091",
+      "graphql-port": ":9092"
+    },
+    "context": {
+      "timeout": 2
+    },
+    "database-local": {
+      "host": "0.0.0.0",
+      "port": "5432",
+      "user": "user",
+      "pass": "p@assw0rd",
+      "name": "stnkkudev"
+    },
+    "database": {
+      "host": "postgre",
+      "port": "5432",
+      "user": "user",
+      "pass": "p@assw0rd",
+      "name": "stnkku_mdm"
+    }
+  }

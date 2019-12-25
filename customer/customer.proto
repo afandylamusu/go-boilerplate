@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package customer;
+
+message FindCustomerRequest {
+  string customerID = 1;
+}
+
+message FindCustomerResponse { 
+  bool success = 1; 
+}
+
+service CustomerQueryService {
+    rpc Find(FindCustomerRequest) returns (FindCustomerResponse);
+}
