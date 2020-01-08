@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/afandylamusu/moonlay.mcservice/models"
+	"github.com/afandylamusu/go-boilerplate/models"
 	"github.com/jinzhu/gorm"
 	"github.com/spf13/viper"
 )

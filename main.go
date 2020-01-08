@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/afandylamusu/moonlay.mcservice/customer"
-	"github.com/afandylamusu/moonlay.mcservice/dbconn"
+	"github.com/afandylamusu/go-boilerplate/customer"
+	"github.com/afandylamusu/go-boilerplate/dbconn"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"

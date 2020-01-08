@@ -1,7 +1,7 @@
 package customer
 
 import (
-	"github.com/afandylamusu/moonlay.mcservice/models"
+	"github.com/afandylamusu/go-boilerplate/models"
 )
 
 // Service represent the customer service

@@ -1,5 +1,28 @@
 version: '2'
 services:
+  postgre:
+    image: postgres:9.6-alpine
+    # container_name: stnkku_postgre
+    volumes:
+    #   - ./postgre_data:/var/lib/postgresql/data
+      - ./initial_dev.sql:/docker-entrypoint-initdb.d/initial.sql
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: p@assw0rd
+      
+  pgadmin4:
+    image: dpage/pgadmin4
+    # container_name: stnkku_pgadmin4
+    ports:
+      - "5433:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@ctp.com
+      - PGADMIN_DEFAULT_PASSWORD=rahas1a
+    depends_on:
+      - postgre
+  
   zookeeper:
     image: confluentinc/cp-zookeeper:5.3.1
     hostname: zookeeper

@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/afandylamusu/moonlay.mcservice/dbconn"
-	"github.com/afandylamusu/moonlay.mcservice/models"
+	"github.com/afandylamusu/go-boilerplate/dbconn"
+	"github.com/afandylamusu/go-boilerplate/models"
 	"github.com/jinzhu/gorm"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"

@@ -3,7 +3,7 @@ package customer
 import (
 	"time"
 
-	"github.com/afandylamusu/moonlay.mcservice/models"
+	"github.com/afandylamusu/go-boilerplate/models"
 	uuid "github.com/satori/go.uuid"
 )
 

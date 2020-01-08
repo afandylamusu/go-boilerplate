@@ -11,7 +11,7 @@
       "timeout": 2
     },
     "database-local": {
-      "host": "0.0.0.0",
+      "host": "192.168.99.100",
       "port": "5432",
       "user": "user",
       "pass": "p@assw0rd",

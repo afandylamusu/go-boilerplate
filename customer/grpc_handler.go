@@ -3,7 +3,7 @@ package customer
 import (
 	context "context"
 
-	"github.com/afandylamusu/moonlay.mcservice/dbconn"
+	"github.com/afandylamusu/go-boilerplate/dbconn"
 )
 
 // GrpcHandler the GRPC Handler
