@@ -2,7 +2,7 @@ version: '2'
 services:
   postgre:
     image: postgres:9.6-alpine
-    # container_name: stnkku_postgre
+    container_name: postgre
     volumes:
     #   - ./postgre_data:/var/lib/postgresql/data
       - ./initial_dev.sql:/docker-entrypoint-initdb.d/initial.sql
@@ -14,7 +14,7 @@ services:
       
   pgadmin4:
     image: dpage/pgadmin4
-    # container_name: stnkku_pgadmin4
+    container_name: pgadmin4
     ports:
       - "5433:80"
     environment:
