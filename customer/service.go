@@ -1,7 +1,7 @@
 package customer
 
 import (
-	"github.com/afandylamusu/stnkku.mdm/models"
+	"github.com/afandylamusu/moonlay.mcservice/models"
 )
 
 // Service represent the customer service

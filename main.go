@@ -6,8 +6,8 @@ import (
 	"net"
 	"time"
 
-	"github.com/afandylamusu/stnkku.mdm/customer"
-	"github.com/afandylamusu/stnkku.mdm/dbconn"
+	"github.com/afandylamusu/moonlay.mcservice/customer"
+	"github.com/afandylamusu/moonlay.mcservice/dbconn"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/keepalive"
@@ -30,7 +30,7 @@ func init() {
 	}
 }
 
-func startKafkaConsumers(c *kafka.Consumer, db *dbconn.Connection) {
+func startKafkaConsumers(c *kafka.Consumer, db *dbconn.DbConnection) {
 
 	// c.SubscribeTopics([]string{"myTopic", "^aRegex.*[Tt]opic"}, nil)
 	c.SubscribeTopics([]string{
@@ -53,7 +53,7 @@ func startKafkaConsumers(c *kafka.Consumer, db *dbconn.Connection) {
 }
 
 // startGrpcServer to starting GRPC Server
-func startGrpcServer(port string, db *dbconn.Connection) error {
+func startGrpcServer(port string, db *dbconn.DbConnection) error {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -73,7 +73,7 @@ func startGrpcServer(port string, db *dbconn.Connection) error {
 		grpc.MaxConcurrentStreams(5),
 	)
 
-	customer.RegisterCustomerQueryServiceServer(s, &customer.ServiceHandler{Port: port, Db: db})
+	customer.RegisterCustomerQueryServiceServer(s, &customer.GrpcHandler{Port: port, Db: db})
 	log.Println("Run GRPC Server at port " + port)
 
 	if err := s.Serve(lis); err != nil {
@@ -86,11 +86,11 @@ func startGrpcServer(port string, db *dbconn.Connection) error {
 func main() {
 
 	// Connection for KAFKA
-	conn := &dbconn.Connection{}
+	conn := &dbconn.DbConnection{}
 	conn.Open()
 
 	// Connection for GRPC
-	conn2 := &dbconn.Connection{}
+	conn2 := &dbconn.DbConnection{}
 	conn2.Open()
 
 	defer conn.Close()
@@ -98,8 +98,8 @@ func main() {
 
 	// KAFKA Consumers
 	c, err := kafka.NewConsumer(&kafka.ConfigMap{
-		"bootstrap.servers": "0.0.0.0:9092,0.0.0.0:9093,0.0.0.0:9094",
-		"group.id":          "myGroup",
+		"bootstrap.servers": "0.0.0.0:9092",
+		"group.id":          "g-customer-opr",
 		"auto.offset.reset": "earliest",
 	})
 

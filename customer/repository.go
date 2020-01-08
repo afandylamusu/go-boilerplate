@@ -1,11 +1,15 @@
 package customer
 
 import (
-	"github.com/afandylamusu/stnkku.mdm/models"
+	"time"
+
+	"github.com/afandylamusu/moonlay.mcservice/models"
+	uuid "github.com/satori/go.uuid"
 )
 
 // Repository represent the customer repository
 type Repository interface {
-	Fetch(query interface{}, args ...interface{}) ([]models.Customer, error)
-	Store(m *models.Customer) error
+	Fetch(offset int, limit int, query interface{}, args ...interface{}) ([]models.Customer, error)
+	Store(id uuid.UUID, firstName string, lastName string, user string, t time.Time, tested bool) (*models.Customer, error)
+	Update(m *models.Customer)
 }
